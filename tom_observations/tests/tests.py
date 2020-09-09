@@ -133,6 +133,9 @@ class TestObservationViews(TestCase):
         self.assertEqual(ObservationRecord.objects.filter(observation_id='fakeid').first().user, self.user)
 
 
+    #def test_observation_payload(self):
+
+
 @override_settings(TOM_FACILITY_CLASSES=['tom_observations.tests.utils.FakeRoboticFacility'],
                    TARGET_PERMISSIONS_ONLY=False)
 class TestObservationViewsRowLevelPermissions(TestCase):

@@ -16,6 +16,8 @@ from tom_observations.utils import get_sidereal_visibility
 from tom_targets.models import Target, TargetExtra, TargetList
 from tom_targets.forms import TargetVisibilityForm
 
+import json
+
 register = template.Library()
 
 
@@ -256,3 +258,48 @@ def aladin(target):
     and a scale bar. The resulting image is downloadable. This templatetag only works for sidereal targets.
     """
     return {'target': target}
+
+
+@register.filter
+def eph_json_to_value_ra(value):
+    """
+    Returns the middle RA and Dec of the json_ephemeris
+    """
+    if value != 'None':
+        eph_json = json.loads(value)
+        keys = list(eph_json.keys())
+        k = keys[0]
+        eph_len = len(eph_json[k][0])
+        return deg_to_sexigesimal(float(eph_json[k][int(eph_len/2)]['R']), 'hms')
+    else:
+        return -32768.0
+
+
+@register.filter
+def eph_json_to_value_dec(value):
+    """
+    Returns the middle RA and Dec of the json_ephemeris
+    """
+    if value != 'None':
+        eph_json = json.loads(value)
+        keys = list(eph_json.keys())
+        k = keys[0]
+        eph_len = len(eph_json[k][0])
+        return deg_to_sexigesimal(float(eph_json[k][int(eph_len/2)]['D']), 'dms')
+    else:
+        return -32768.0
+
+
+@register.filter
+def eph_json_to_value_mjd(value):
+    """
+    Returns the middle RA and Dec of the json_ephemeris
+    """
+    if value != 'None':
+        eph_json = json.loads(value)
+        keys = list(eph_json.keys())
+        k = keys[0]
+        eph_len = len(eph_json[k][0])
+        return round(float(eph_json[k][int(eph_len/2)]['t']), 5)
+    else:
+        return -32768.0
